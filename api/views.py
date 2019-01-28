@@ -7,7 +7,6 @@ from rest_framework.generics import (
 	DestroyAPIView,
 	CreateAPIView,
 )
-
 from .serializers import (
 	UserCreateSerializer,
 	ProductListSerializer,
@@ -15,7 +14,6 @@ from .serializers import (
 	CategoryListSerializer,
 	OrderListSerializer
 )
-
 from rest_framework.filters import OrderingFilter, SearchFilter
 
 from .models import Product, Category, Order
