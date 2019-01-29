@@ -22,14 +22,14 @@ class Product(models.Model):
 class CartItem(models.Model):
 	item = models.ForeignKey(Product, on_delete=models.CASCADE)
 	quantity = models.PositiveIntegerField(default=1, validators=[MinValueValidator(1), MaxValueValidator(10)])
-	user = models.ForeignKey(User, on_delete=models.CASCADE)
+	order = models.ForeignKey(Order, on_delete=models.CASCADE)
 
 
 class Order(models.Model):
 	order_id = models.CharField(max_length=10)
 	date = models.DateTimeField(auto_now=True, auto_now_add=False)
 	user = models.ForeignKey(User, on_delete=models.CASCADE)
-	item = models.ForeignKey(CartItem, on_delete=models.CASCADE)
+	# item = models.ForeignKey(CartItem, on_delete=models.CASCADE)
 
 	def __str__(self):
 		return self.order_id
