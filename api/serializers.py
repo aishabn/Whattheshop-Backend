@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 
 from rest_framework import serializers
 
-from .models import Product, Category, Order
+from .models import Product, Category, Order, CartItem
 
 
 class UserCreateSerializer(serializers.ModelSerializer):
@@ -49,7 +49,35 @@ class CategoryListSerializer(serializers.ModelSerializer):
 		model = Category
 		fields = '__all__'
 
-class OrderListSerializer(serializers.ModelSerializer):
+class OrderSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = Order
 		fields = '__all__'
+
+class OrderListSerializer(serializers.ModelSerializer):
+	detail = serializers.HyperlinkedIdentityField(
+		view_name = "api-detail",
+		lookup_field = "id",
+		lookup_url_kwarg = "order_id"
+		)
+
+	cart_items = serializers.SerializerMethodField()
+
+	class Meta:
+		model = Order
+		fields = '__all__'
+
+	def get_cart_items(self, obj):
+		items = CartItem.objects.filter(item=obj)
+		return items
+
+
+class ItemDetailSerializer(serializers.ModelSerializer):
+	cart_items = serializers.SerializerMethodField()
+
+	class Meta:
+		model = CartItem
+		fields = '__all__'
+
+	def get_cart_items(self, obj):
+		return OrderSerializer(obj.cartitem_set.all(), many=True).data

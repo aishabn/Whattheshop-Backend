@@ -33,6 +33,10 @@ class ProductDetailSerializer(RetrieveAPIView):
 	lookup_field = 'id'
 	lookup_url_kwarg = 'product_id'
 
+class UserSerializerView(RetrieveAPIView):
+	queryset = User.objects.all()
+	serializer_class = UserSerializer
+
 class CategoryListSerializer(ListAPIView):
 	queryset = Category.objects.all()
 	serializer_class = CategoryListSerializer
@@ -50,4 +54,6 @@ class OrderDetailSerializer(RetrieveAPIView):
 	serializer_class = OrderListSerializer
 	lookup_field = 'id'
 	lookup_url_kwarg = 'order_id'
+
+
 
