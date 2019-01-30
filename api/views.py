@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from rest_framework.generics import CreateAPIView
 from .serializers import UserCreateSerializer
 from rest_framework.generics import (
@@ -12,7 +13,8 @@ from .serializers import (
 	ProductListSerializer,
 	ProductDetailSerializer,
 	CategoryListSerializer,
-	OrderListSerializer
+	OrderListSerializer,
+	UserSerializer
 )
 from rest_framework.filters import OrderingFilter, SearchFilter
 

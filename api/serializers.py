@@ -54,6 +54,18 @@ class OrderSerializer(serializers.ModelSerializer):
 		model = Order
 		fields = '__all__'
 
+
+class ItemDetailSerializer(serializers.ModelSerializer):
+	cart_items = serializers.SerializerMethodField()
+
+	class Meta:
+		model = CartItem
+		fields = '__all__'
+
+	def get_cart_items(self, obj):
+		return OrderSerializer(obj.cartitem_set.all(), many=True).data
+
+		
 class OrderListSerializer(serializers.ModelSerializer):
 	detail = serializers.HyperlinkedIdentityField(
 		view_name = "api-detail",
@@ -68,16 +80,5 @@ class OrderListSerializer(serializers.ModelSerializer):
 		fields = '__all__'
 
 	def get_cart_items(self, obj):
-		items = CartItem.objects.filter(item=obj)
-		return items
-
-
-class ItemDetailSerializer(serializers.ModelSerializer):
-	cart_items = serializers.SerializerMethodField()
-
-	class Meta:
-		model = CartItem
-		fields = '__all__'
-
-	def get_cart_items(self, obj):
-		return OrderSerializer(obj.cartitem_set.all(), many=True).data
+		items = CartItem.objects.filter(order=obj)
+		return ItemDetailSerializer(items, many=True).data
