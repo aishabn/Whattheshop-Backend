@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf.urls.static import static
 from django.conf import settings
-from api.views import UserCreateAPIView, ProductListSerializer, ProductDetailSerializer, CategoryListSerializer, OrderListSerializer, OrderDetailSerializer
+from api.views import UserSerializerView, UserCreateAPIView, ProductListSerializer, ProductDetailSerializer, CategoryListSerializer, OrderListSerializer, OrderDetailSerializer
 
 
 urlpatterns = [
@@ -13,6 +13,8 @@ urlpatterns = [
 	path('api/category/', CategoryListSerializer.as_view(), name='api-category'),
 	path('api/order/', OrderListSerializer.as_view(), name='api-order'),
 	path('api/order/detail/<int:order_id>/', OrderDetailSerializer.as_view(), name='api-order-detail'),
+	path('api/profile/', UserSerializerView.as_view(), name='api-profile'),
+
 
 ]
 
