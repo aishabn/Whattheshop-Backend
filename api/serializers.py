@@ -82,3 +82,9 @@ class OrderListSerializer(serializers.ModelSerializer):
 	def get_cart_items(self, obj):
 		items = CartItem.objects.filter(order=obj)
 		return ItemDetailSerializer(items, many=True).data
+
+class OrderCreateUpdateSerializer(serializers.ModelSerializer):
+	class Meta:
+		model = Order
+		fields = '__all__'
+		
