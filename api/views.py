@@ -13,33 +13,34 @@ from .serializers import (
 	ProductListSerializer,
 	ProductDetailSerializer,
 	CategoryListSerializer,
-	OrderListSerializer,
+	# OrderListSerializer,
 	UserSerializer,
-	ItemDetailSerializer,
-	OrderCreateUpdateSerializer
+	OrderDetailSerializer,
+	OrderCreateSerializer,
+	
 )
 from rest_framework.filters import OrderingFilter, SearchFilter
 
 from .models import Product, Category, Order
+from django.http import HttpResponse, JsonResponse
 
 class UserCreateAPIView(CreateAPIView):
 	serializer_class = UserCreateSerializer
 
-class ProductListView(ListAPIView):
-	queryset = Product.objects.all()
-	serializer_class = ProductListSerializer
-	filter_backends = [OrderingFilter, SearchFilter,]
-	search_fields = ['name', 'description']
+class UserView(RetrieveAPIView):
+	queryset = User.objects.all()
+	serializer_class = UserSerializer
+	lookup_field = 'id'
+	lookup_url_kwarg = 'user_id'
+
+#ProductListView -> CategoryListView
+
 
 class ProductDetailView(RetrieveAPIView):
 	queryset = Product.objects.all()
 	serializer_class = ProductDetailSerializer
 	lookup_field = 'id'
 	lookup_url_kwarg = 'product_id'
-
-class UserSerializerView(RetrieveAPIView):
-	queryset = User.objects.all()
-	serializer_class = UserSerializer
 
 class CategoryListView(ListAPIView):
 	queryset = Category.objects.all()
@@ -49,26 +50,24 @@ class CategoryListView(ListAPIView):
 
 class OrderListView(ListAPIView):
 	queryset = Order.objects.all()
-	serializer_class = OrderListSerializer
+	serializer_class = OrderCreateSerializer
 	filter_backends = [OrderingFilter, SearchFilter,]
-	search_fields = ['order_id']
+	search_fields = ['id']
 
 class OrderDetailView(RetrieveAPIView):
-	queryset = Product.objects.all()
-	serializer_class = ItemDetailSerializer
+	queryset = Order.objects.all()
+	serializer_class = OrderDetailSerializer
 	lookup_field = 'id'
 	lookup_url_kwarg = 'order_id'
 
 class OrderCreateView(CreateAPIView):
-	serializer_class = OrderCreateUpdateSerializer
+	serializer_class = OrderCreateSerializer
 
-	def perform_create(self, serializer):
-		serializer.save(user=self.request.user)
-		
-class OrderUpdateView(RetrieveUpdateAPIView):
-    queryset = Order.objects.all()
-    serializer_class = OrderCreateUpdateSerializer
-    lookup_field = 'id'
-    lookup_url_kwarg = 'order_id'
+	def post(self, request, format=None):
+		serializer = OrderCreateSerializer(data=request.data)
+		if serializer.is_valid():
+			serializer.save()
+			return JsonResponse(serializer.data)
+		return JsonResponse(serializer.errors)
 
 
