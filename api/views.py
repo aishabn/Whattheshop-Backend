@@ -11,13 +11,13 @@ from rest_framework.generics import (
 from .serializers import (
 	UserCreateSerializer,
 	ProductListSerializer,
-	ProductDetailSerializer,
+	CategoryDetailSerializer,
 	CategoryListSerializer,
 	# OrderListSerializer,
 	UserSerializer,
 	OrderDetailSerializer,
 	OrderCreateSerializer,
-	
+
 )
 from rest_framework.filters import OrderingFilter, SearchFilter
 
@@ -36,11 +36,11 @@ class UserView(RetrieveAPIView):
 #ProductListView -> CategoryListView
 
 
-class ProductDetailView(RetrieveAPIView):
-	queryset = Product.objects.all()
-	serializer_class = ProductDetailSerializer
+class CategoryDetailView(RetrieveAPIView):
+	queryset = Category.objects.all()
+	serializer_class = CategoryDetailSerializer
 	lookup_field = 'id'
-	lookup_url_kwarg = 'product_id'
+	lookup_url_kwarg = 'cat_id'
 
 class CategoryListView(ListAPIView):
 	queryset = Category.objects.all()
@@ -48,17 +48,20 @@ class CategoryListView(ListAPIView):
 	filter_backends = [OrderingFilter, SearchFilter,]
 	search_fields = ['name']
 
-class OrderListView(ListAPIView):
+class PastOrderListView(ListAPIView):
 	queryset = Order.objects.all()
 	serializer_class = OrderCreateSerializer
 	filter_backends = [OrderingFilter, SearchFilter,]
 	search_fields = ['id']
 
-class OrderDetailView(RetrieveAPIView):
+class PastOrderDetailView(RetrieveAPIView):
 	queryset = Order.objects.all()
 	serializer_class = OrderDetailSerializer
 	lookup_field = 'id'
 	lookup_url_kwarg = 'order_id'
+
+	def get_queryset(self):
+		Order.objects.get(user=self.request.user)
 
 class OrderCreateView(CreateAPIView):
 	serializer_class = OrderCreateSerializer
@@ -69,5 +72,4 @@ class OrderCreateView(CreateAPIView):
 			serializer.save()
 			return JsonResponse(serializer.data)
 		return JsonResponse(serializer.errors)
-
 

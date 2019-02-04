@@ -27,8 +27,8 @@ class Order(models.Model):
 	# item = models.ForeignKey(CartItem, on_delete=models.CASCADE)
 
 	def __str__(self):
-		return self.id
-		
+		return self.order_id
+
 class CartItem(models.Model):
 	item = models.ForeignKey(Product, on_delete=models.CASCADE)
 	quantity = models.PositiveIntegerField(default=1, validators=[MinValueValidator(1), MaxValueValidator(10)])
