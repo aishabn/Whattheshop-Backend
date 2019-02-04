@@ -27,22 +27,19 @@ class AddressSerializer(serializers.ModelSerializer):
 		fields = '__all__'
 
 class UserSerializer(serializers.ModelSerializer):
-	# address = serializers.SerializerMethodField()
+	address = AddressSerializer()
 	class Meta:
 		model = User
-		fields = ['username', 'first_name', 'last_name', 'email']
-
-	# def get_address(self, obj):
-	# 	return AddressSerializer(obj.address_set.all(), many=True).data
+		fields = ['username', 'first_name', 'last_name', 'email', 'address']
 
 class ProductListSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = Product
 		fields =['name','price','description','img','brand']
 
-class ProductDetailSerializer(serializers.ModelSerializer):
+class CategoryDetailSerializer(serializers.ModelSerializer):
 	class Meta:
-		model = Product
+		model = Category
 		fields = '__all__'
 
 class CategoryListSerializer(serializers.ModelSerializer):
@@ -68,14 +65,14 @@ class OrderCreateSerializer(serializers.ModelSerializer):
 		return CartItemSerializer(obj.cartitem_set.all(), many=True).data
 
 class OrderDetailSerializer(serializers.ModelSerializer):
-	order = serializers.SerializerMethodField()
+	# order = serializers.SerializerMethodField()
 
 	class Meta:
 		model = Order
 		fields = '__all__'
 
-	def get_cart_items(self, obj):
-		return OrderSerializer(obj.order_set.all(), many=True).data
+	# def get_cart_items(self, obj):
+	# 	return OrderSerializer(obj.order_set.all(), many=True).data
 
 
 # class OrderListSerializer(serializers.ModelSerializer):
