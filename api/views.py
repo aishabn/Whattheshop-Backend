@@ -60,8 +60,8 @@ class PastOrderDetailView(RetrieveAPIView):
 	lookup_field = 'id'
 	lookup_url_kwarg = 'order_id'
 
-	def get_queryset(self):
-		Order.objects.get(user=self.request.user)
+	# def get_queryset(self):
+	# 	Order.objects.get(user=self.request.user)
 
 class OrderCreateView(CreateAPIView):
 	serializer_class = OrderCreateSerializer
