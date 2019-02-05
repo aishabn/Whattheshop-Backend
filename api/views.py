@@ -17,6 +17,7 @@ from .serializers import (
 	UserSerializer,
 	OrderDetailSerializer,
 	OrderCreateSerializer,
+	CartItemSerializer,
 
 )
 from rest_framework.filters import OrderingFilter, SearchFilter
@@ -48,11 +49,25 @@ class CategoryListView(ListAPIView):
 	filter_backends = [OrderingFilter, SearchFilter,]
 	search_fields = ['name']
 
+class CartItemCreateView(CreateAPIView):
+	serializer_class = CartItemSerializer
+
+	# def post(self, request, format=None):
+	# 	serializer = CartItemSerializer(data=request.data)
+	# 	if serializer.is_valid():
+	# 		serializer.save()
+	# 		return JsonResponse(serializer.data)
+	# 	return JsonResponse(serializer.errors)
+
+
 class PastOrderListView(ListAPIView):
-	queryset = Order.objects.all()
+	# queryset = Order.objects.all()
 	serializer_class = OrderCreateSerializer
 	filter_backends = [OrderingFilter, SearchFilter,]
 	search_fields = ['id']
+
+	def get_queryset(self):
+		return Order.objects.filter(user=self.request.user)
 
 class PastOrderDetailView(RetrieveAPIView):
 	queryset = Order.objects.all()
@@ -60,8 +75,6 @@ class PastOrderDetailView(RetrieveAPIView):
 	lookup_field = 'id'
 	lookup_url_kwarg = 'order_id'
 
-	# def get_queryset(self):
-	# 	Order.objects.get(user=self.request.user)
 
 class OrderCreateView(CreateAPIView):
 	serializer_class = OrderCreateSerializer
