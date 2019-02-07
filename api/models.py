@@ -27,12 +27,15 @@ class Order(models.Model):
 	# item = models.ForeignKey(CartItem, on_delete=models.CASCADE)
 
 	def __str__(self):
-		return self.order_id
+		return str(self.id) + " " + str(self.user)
 
 class CartItem(models.Model):
 	item = models.ForeignKey(Product, on_delete=models.CASCADE)
 	quantity = models.PositiveIntegerField(default=1, validators=[MinValueValidator(1), MaxValueValidator(10)])
 	order = models.ForeignKey(Order, on_delete=models.CASCADE)
+
+	def __str__(self):
+		return str(self.order)
 
 class Address(models.Model):
 	area = models.CharField(max_length=100)

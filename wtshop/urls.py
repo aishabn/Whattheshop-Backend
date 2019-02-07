@@ -15,7 +15,6 @@ urlpatterns = [
 	path('api/order/', PastOrderListView.as_view(), name='api-order'),
 	path('api/order/detail/<int:order_id>/', PastOrderDetailView.as_view(), name='api-order-detail'),
 	path('api/order/create/', OrderCreateView.as_view(), name='api-order-create'),
-	path('api/profile/<int:user_id>', UserView.as_view(), name='api-profile'),
 
 ]
 
