@@ -40,8 +40,7 @@ class UserView(RetrieveAPIView):
 	def get(self,request):
 		return JsonResponse(UserSerializer(request.user).data)
 
-
-
+#ProductListView -> CategoryListView
 
 class CategoryDetailView(RetrieveAPIView):
 	queryset = Category.objects.all()
@@ -62,7 +61,6 @@ class CartItemCreateView(CreateAPIView):
 		order, created = Order.objects.get_or_create(user=self.request.user, status=True )
 		serializer.save(order=order)
 
-
 class PastOrderListView(ListAPIView):
 	
 	serializer_class = OrderCreateSerializer
@@ -78,7 +76,6 @@ class PastOrderDetailView(RetrieveAPIView):
 	lookup_field = 'id'
 	lookup_url_kwarg = 'order_id'
 
-
 class CheckoutView(APIView):
 
 	def get(self, request, format=None):
@@ -86,6 +83,6 @@ class CheckoutView(APIView):
 		order = Order.objects.get(user=request.user, status=True)
 		order.status = False
 		order.save()
-		
+    
 		return JsonResponse({"list":"list"},safe=False)
 

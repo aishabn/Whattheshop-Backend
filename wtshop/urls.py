@@ -17,6 +17,7 @@ urlpatterns = [
 	# path('api/order/create/', OrderCreateView.as_view(), name='api-order-create'),
 	path('api/checkout/', CheckoutView.as_view(), name='api-checkout'),
 
+
 ]
 
 

@@ -49,13 +49,9 @@ class CategoryListSerializer(serializers.ModelSerializer):
 		fields = '__all__'
 
 class CartItemSerializer(serializers.ModelSerializer):
-	
 	class Meta:
 		model = CartItem
 		fields = ['item','quantity']
-
-	
-
 
 
 class OrderCreateSerializer(serializers.ModelSerializer):
@@ -67,8 +63,7 @@ class OrderCreateSerializer(serializers.ModelSerializer):
 
 	def get_cart_items(self, obj):
 		return CartItemSerializer(obj.cartitem_set.all(), many=True).data
-		
-	
+
 
 class OrderDetailSerializer(serializers.ModelSerializer):
 
