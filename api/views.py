@@ -22,8 +22,12 @@ from .serializers import (
 )
 from rest_framework.filters import OrderingFilter, SearchFilter
 
-from .models import Product, Category, Order
+from .models import Product, Category, Order, CartItem
 from django.http import HttpResponse, JsonResponse
+
+from rest_framework.views import APIView
+
+
 
 class UserCreateAPIView(CreateAPIView):
 	serializer_class = UserCreateSerializer
@@ -33,6 +37,9 @@ class UserView(RetrieveAPIView):
 	serializer_class = UserSerializer
 	lookup_field = 'id'
 	lookup_url_kwarg = 'user_id'
+
+	def get(slef,request):
+		return JsonResponse(UserSerializer(request.user).data)
 
 #ProductListView -> CategoryListView
 
@@ -52,13 +59,6 @@ class CategoryListView(ListAPIView):
 class CartItemCreateView(CreateAPIView):
 	serializer_class = CartItemSerializer
 
-	# def post(self, request, format=None):
-	# 	serializer = CartItemSerializer(data=request.data)
-	# 	if serializer.is_valid():
-	# 		serializer.save()
-	# 		return JsonResponse(serializer.data)
-	# 	return JsonResponse(serializer.errors)
-
 
 class PastOrderListView(ListAPIView):
 	# queryset = Order.objects.all()
@@ -75,13 +75,18 @@ class PastOrderDetailView(RetrieveAPIView):
 	lookup_field = 'id'
 	lookup_url_kwarg = 'order_id'
 
-class OrderCreateView(CreateAPIView):
-	serializer_class = OrderCreateSerializer
+class OrderCreateView(APIView):
+	# serializer_class = OrderCreateSerializer
 
 	def post(self, request, format=None):
-		serializer = OrderCreateSerializer(data=request.data)
-		if serializer.is_valid():
-			serializer.save()
-			return JsonResponse(serializer.data)
-		return JsonResponse(serializer.errors)
+		print(request.data)
+		order = Order.objects.create(user=request.user)
+		for item in request.data:
+			i = CartItem.objects.create(order=order, item_id=item['item_id'], quantity=item['quantity'])
+			# print(item)
+		# serializer = OrderCreateSerializer(user=request.user)
+		# if serializer.is_valid():
+		# 	serializer.save()
+			# return JsonResponse(serializer.data)
+		return JsonResponse({"list":"list"},safe=False)
 
