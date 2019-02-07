@@ -13,7 +13,6 @@ from .serializers import (
 	ProductListSerializer,
 	CategoryDetailSerializer,
 	CategoryListSerializer,
-	# OrderListSerializer,
 	UserSerializer,
 	OrderDetailSerializer,
 	OrderCreateSerializer,
@@ -38,11 +37,10 @@ class UserView(RetrieveAPIView):
 	lookup_field = 'id'
 	lookup_url_kwarg = 'user_id'
 
-	def get(slef,request):
+	def get(self,request):
 		return JsonResponse(UserSerializer(request.user).data)
 
 #ProductListView -> CategoryListView
-
 
 class CategoryDetailView(RetrieveAPIView):
 	queryset = Category.objects.all()
@@ -59,15 +57,18 @@ class CategoryListView(ListAPIView):
 class CartItemCreateView(CreateAPIView):
 	serializer_class = CartItemSerializer
 
+	def perform_create(self, serializer):
+		order, created = Order.objects.get_or_create(user=self.request.user, status=True )
+		serializer.save(order=order)
 
 class PastOrderListView(ListAPIView):
-	# queryset = Order.objects.all()
+	
 	serializer_class = OrderCreateSerializer
 	filter_backends = [OrderingFilter, SearchFilter,]
 	search_fields = ['id']
 
 	def get_queryset(self):
-		return Order.objects.filter(user=self.request.user)
+		return Order.objects.filter(user=self.request.user, status=False)
 
 class PastOrderDetailView(RetrieveAPIView):
 	queryset = Order.objects.all()
@@ -75,18 +76,13 @@ class PastOrderDetailView(RetrieveAPIView):
 	lookup_field = 'id'
 	lookup_url_kwarg = 'order_id'
 
-class OrderCreateView(APIView):
-	# serializer_class = OrderCreateSerializer
+class CheckoutView(APIView):
 
-	def post(self, request, format=None):
-		print(request.data)
-		order = Order.objects.create(user=request.user)
-		for item in request.data:
-			i = CartItem.objects.create(order=order, item_id=item['item_id'], quantity=item['quantity'])
-			# print(item)
-		# serializer = OrderCreateSerializer(user=request.user)
-		# if serializer.is_valid():
-		# 	serializer.save()
-			# return JsonResponse(serializer.data)
+	def get(self, request, format=None):
+		
+		order = Order.objects.get(user=request.user, status=True)
+		order.status = False
+		order.save()
+    
 		return JsonResponse({"list":"list"},safe=False)
 

@@ -49,19 +49,10 @@ class CategoryListSerializer(serializers.ModelSerializer):
 		fields = '__all__'
 
 class CartItemSerializer(serializers.ModelSerializer):
-	item = ProductListSerializer()
 	class Meta:
 		model = CartItem
-		fields = ['item','quantity','order']
+		fields = ['item','quantity']
 
-	def create(self, validated_data):
-		# order = Order.objects.create(user=self.request.user)
-		item = validated_data['item']
-		quantity = validated_data['quantity']
-		e = serializers.save(user=self.request.user)
-		print(e)
-
-		return validated_data
 
 class OrderCreateSerializer(serializers.ModelSerializer):
 	cart_items = serializers.SerializerMethodField()
@@ -72,37 +63,13 @@ class OrderCreateSerializer(serializers.ModelSerializer):
 
 	def get_cart_items(self, obj):
 		return CartItemSerializer(obj.cartitem_set.all(), many=True).data
-		
-	# def create(self, validated_data):
-	# 	# order = Order.objects.create(user=self.request.user)
-	# 	# item = validated_data['cart_items']
-	# 	# quantity = validated_data['quantity']
-	# 	e = serializers.save(user=self.request.user)
-	# 	print(e)
 
-	# 	return validated_data
 
 class OrderDetailSerializer(serializers.ModelSerializer):
-	# order = serializers.SerializerMethodField()
 
 	class Meta:
 		model = Order
 		fields = '__all__'
-
-	# def get_cart_items(self, obj):
-	# 	return OrderSerializer(obj.order_set.all(), many=True).data
-
-
-# class OrderListSerializer(serializers.ModelSerializer):
-# 	cart_items = serializers.SerializerMethodField()
-
-# 	class Meta:
-# 		model = Order
-# 		fields = '__all__'
-
-# 	def get_cart_items(self, obj):
-# 		items = CartItem.objects.filter(order=obj)
-# 		return ItemDetailSerializer(items, many=True).data
 
 
 		
