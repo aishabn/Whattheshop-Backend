@@ -2,7 +2,9 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf.urls.static import static
 from django.conf import settings
-from api.views import UserView, UserCreateAPIView, CategoryDetailView, CategoryListView,CartItemCreateView, PastOrderListView, PastOrderDetailView, CheckoutView
+from api.views import UserView, UserCreateAPIView, 
+CategoryDetailView, CategoryListView,CartItemCreateView,
+PastOrderListView, PastOrderDetailView, CheckoutView, CartItemDeleteView
 
 
 urlpatterns = [
@@ -16,6 +18,8 @@ urlpatterns = [
 	path('api/order/detail/<int:order_id>/', PastOrderDetailView.as_view(), name='api-order-detail'),
 	# path('api/order/create/', OrderCreateView.as_view(), name='api-order-create'),
 	path('api/checkout/', CheckoutView.as_view(), name='api-checkout'),
+    path('api/delete/<int:item_id>', CartItemDeleteView.as_view(), name='api-delete'),
+
 
 
 ]
