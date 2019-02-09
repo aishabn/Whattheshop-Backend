@@ -4,6 +4,8 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 
 class Category(models.Model):
 	name = models.CharField(max_length=100)
+	img = models.ImageField(blank = True)
+
 
 	def __str__(self):
 		return self.name

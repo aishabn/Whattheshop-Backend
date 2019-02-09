@@ -18,7 +18,7 @@ urlpatterns = [
 	path('api/order/detail/<int:order_id>/', PastOrderDetailView.as_view(), name='api-order-detail'),
 	# path('api/order/create/', OrderCreateView.as_view(), name='api-order-create'),
 	path('api/checkout/', CheckoutView.as_view(), name='api-checkout'),
-    path('api/delete/<int:item_id>', CartItemDeleteView.as_view(), name='api-delete'),
+	path('api/delete/<int:item_id>', CartItemDeleteView.as_view(), name='api-delete'),
 
 
 
