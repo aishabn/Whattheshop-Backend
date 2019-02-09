@@ -6,12 +6,17 @@ from rest_framework import serializers
 
 from .models import Product, Category, Order, CartItem, Address
 
+class AddressSerializer(serializers.ModelSerializer):
+	class Meta:
+		model = Address
+		exclude = ["user"]
 
 class UserCreateSerializer(serializers.ModelSerializer):
 	password = serializers.CharField(write_only=True)
+	address =AddressSerializer()
 	class Meta:
 		model = User
-		fields = ['username', 'password']
+		fields = ['username', 'password','address']
 
 	def create(self, validated_data):
 		username = validated_data['username']
@@ -19,12 +24,13 @@ class UserCreateSerializer(serializers.ModelSerializer):
 		new_user = User(username=username)
 		new_user.set_password(password)
 		new_user.save()
-		return validated_data
 
-class AddressSerializer(serializers.ModelSerializer):
-	class Meta:
-		model = Address
-		fields = '__all__'
+		address = dict(validated_data['address'])
+		print((address))
+		new_address = Address(area=address['area'], block=address['block'],street=address['street'],building=address['building'],phone_number=address['phone_number'], user=new_user)
+		new_address.save()
+
+		return validated_data
 
 class UserSerializer(serializers.ModelSerializer):
 	address = AddressSerializer()
@@ -66,7 +72,6 @@ class OrderCreateSerializer(serializers.ModelSerializer):
 
 
 class OrderDetailSerializer(serializers.ModelSerializer):
-
 	class Meta:
 		model = Order
 		fields = '__all__'
