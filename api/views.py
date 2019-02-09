@@ -32,14 +32,12 @@ class UserCreateAPIView(CreateAPIView):
 	serializer_class = UserCreateSerializer
 
 class UserView(RetrieveAPIView):
-	queryset = User.objects.all()
 	serializer_class = UserSerializer
-	lookup_field = 'id'
-	lookup_url_kwarg = 'user_id'
 
 	def get(self,request):
-		return JsonResponse(UserSerializer(request.user).data)
-
+		user =  request.user
+		return JsonResponse(UserSerializer(user).data)
+		
 #ProductListView -> CategoryListView
 
 class CategoryDetailView(RetrieveAPIView):
