@@ -78,7 +78,7 @@ class CheckoutView(APIView):
 		order = Order.objects.get(user=request.user, status=True)
 		order.status = False
 		order.save()
-    
+	
 		return JsonResponse({"list":"list"},safe=False)
 
 class CartItemDeleteView(DestroyAPIView):
