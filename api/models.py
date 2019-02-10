@@ -43,7 +43,7 @@ class Address(models.Model):
 	area = models.CharField(max_length=100, blank=True, null=True)
 	block = models.CharField(max_length=100, blank=True, null=True)
 	street = models.CharField(max_length=100, blank=True, null=True)
-	building = models.IntegerField(blank=True, null=True)
+	building = models.CharField(max_length=5, blank=True, null=True)
 	phone_number = models.CharField(max_length=8, blank=True, null=True)
 	user = models.OneToOneField(User, on_delete=models.CASCADE, blank=True, null=True)
 
